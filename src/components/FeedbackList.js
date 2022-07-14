@@ -2,17 +2,39 @@ import { motion, AnimatePresence } from "framer-motion";
 import FeedbackItem from "./ComponentForFeedback";
 import { useContext } from "react";
 import FeedbackContext from "../context/FeedbackContext";
+import Spinner from "./shared/Spinner.js";
 
 function FeedbackList() {
   //extracting data from feedback context and passing it
   // in whatever context we want to use here in this file
-  const { feedback } = useContext(FeedbackContext);
+  const { feedback, isLoading } = useContext(FeedbackContext);
   // we needed feedback from teh context.
 
-  if (!feedback || feedback.length === 0) {
+  if (!isLoading && (!feedback || feedback.length === 0)) {
     return <p>No Result Found..</p>;
   }
 
+  return isLoading ? (
+    <Spinner />
+  ) : (
+    <div className="feedback-list">
+      <AnimatePresence>
+        {feedback.map((item) => {
+          return (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <FeedbackItem key={item.id} item={item} />
+            </motion.div>
+          );
+          //handleDelete is now a prop for feedback item.
+        })}
+      </AnimatePresence>
+    </div>
+  );
   // Version without animation
   // return (
   //   <>
@@ -32,25 +54,6 @@ function FeedbackList() {
   // );
 
   // Version with animation
-  return (
-    <div className="feedback-list">
-      <AnimatePresence>
-        {feedback.map((item) => {
-          return (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <FeedbackItem key={item.id} item={item} />
-            </motion.div>
-          );
-          //handleDelete is now a prop for feedback item.
-        })}
-      </AnimatePresence>
-    </div>
-  );
 }
 
 export default FeedbackList;

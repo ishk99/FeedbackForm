@@ -24,7 +24,7 @@ function FeedbackList() {
             <motion.div
               key={item.id}
               initial={{ opacity: 0 }}
-              animate={{ opacity: 2 }}
+              animate={{ opacity: 3 }}
               exit={{ opacity: 0 }}
             >
               <FeedbackItem key={item.id} item={item} />
